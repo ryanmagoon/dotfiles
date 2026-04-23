@@ -1,0 +1,27 @@
+# chezmoi pattern file (target paths, not source paths).
+# Anything listed here will NOT be applied to $HOME when `chezmoi apply` runs,
+# and also excluded from `chezmoi re-add`.
+
+# Repo-level docs — these live only in the git working tree, never in $HOME.
+README.md
+AGENTS.md
+LICENSE
+.github
+.github/**
+
+# Claude Code runtime directories — these are state, not config.
+# Never let these get swept into the repo.
+.claude/sessions
+.claude/sessions/**
+.claude/backups
+.claude/backups/**
+.claude/projects
+.claude/projects/**
+.claude/shell-snapshots
+.claude/shell-snapshots/**
+.claude/session-env
+.claude/session-env/**
+
+# Local per-machine overrides that should never be synced.
+.claude/*.local.json
+.claude/settings.local.json
