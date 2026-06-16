@@ -16,5 +16,5 @@
 
 - **Automated tests are required.** Write tests for new functionality before committing. Run the full test suite and confirm it passes before every commit.
 - **Manual testing is required.** Before committing, verify the change actually works — build the project, run it, and confirm the feature/fix behaves correctly. Do not commit untested code.
-- **Test environments:** Prefer real DOM when possible. If a simulated DOM is needed, use happy-dom over jsdom.
-- **Colocate by feature, not by file type.** Tests should live alongside the code they test (e.g., `useGamepad.test.ts` next to `useGamepad.ts`) when it makes logical sense, rather than in a separate top-level `__tests__` directory.
+- **Colocate tests by feature, not by file type.** Tests should live alongside the code they test (e.g., a test file next to its module) when it makes logical sense, rather than in a separate top-level test directory.
+- **Test against a realistic environment.** Prefer exercising the real thing (real DOM, real I/O, real dependencies) over mocks where practical; reach for the lightest faithful substitute when the real thing is impractical, and avoid heavy or low-fidelity fakes.
