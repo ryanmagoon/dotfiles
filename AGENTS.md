@@ -15,7 +15,9 @@ Starts with Claude Code config; more tools will follow.
 
 | Task                            | Location                                      |
 |---------------------------------|-----------------------------------------------|
-| Edit global Claude preamble     | `dot_claude/CLAUDE.md`                        |
+| Edit the shared AI instructions | `.chezmoitemplates/ai/<topic>.md`             |
+| Reorder / add a topic           | `.chezmoitemplates/ai-instructions.md`        |
+| Onboard a new AI tool           | New `dot_<tool>/<file>.md.tmpl` (see below)   |
 | Edit Claude settings            | `dot_claude/settings.json`                    |
 | Edit Claude keybindings         | `dot_claude/keybindings.json`                 |
 | Add a Claude agent              | `dot_claude/agents/<name>.md`                 |
@@ -23,6 +25,56 @@ Starts with Claude Code config; more tools will follow.
 | Add a skill                     | `dot_claude/skills/<name>/`                   |
 | Exclude a file from sync        | `.chezmoiignore` (target paths, not source)   |
 | Document the repo for humans    | `README.md`                                   |
+
+## AI instruction fan-out
+
+The same coding conventions govern **every** AI coding tool (Claude Code, Codex,
+opencode, …). They're authored **once** and fanned out. See
+[`docs/adr/0001`](./docs/adr/0001-shared-ai-instructions-fanned-out.md) for why.
+
+**How it fits together:**
+
+- **Topic partials** live in `.chezmoitemplates/ai/` — one file per concern
+  (`commits.md`, `testing.md`, …), mirroring the topical split. Edit these to
+  change a rule.
+- **The shared core** is `.chezmoitemplates/ai-instructions.md` — an explicit,
+  ordered list of `includeTemplate` calls that assembles the partials. Edit this
+  to reorder topics or add/remove one.
+- **Delivery Targets** are thin per-tool wrappers, each a single line:
+  `{{ includeTemplate "ai-instructions.md" . }}`. One per tool, materializing at
+  that tool's expected path:
+  - `dot_claude/CLAUDE.md.tmpl` → `~/.claude/CLAUDE.md`
+  - `dot_codex/AGENTS.md.tmpl` → `~/.codex/AGENTS.md`
+  - `dot_config/opencode/AGENTS.md.tmpl` → `~/.config/opencode/AGENTS.md`
+
+The core is **tool-neutral**: it contains no `{{ if eq tool ... }}` branching.
+Rules that read Claude-flavored (worktree detection, `~/.claude/rules/` paths)
+have been generalized so they're true for any tool. Don't add tool-conditionals
+to the core — if something is truly one-tool-only, it doesn't belong in the
+shared body. Claude is the only tool with a larger config surface (settings,
+keybindings, agents, commands, skills); that lives under `dot_claude/` and is
+**not** part of the fan-out — only the instructions are shared.
+
+**To onboard a new AI tool:** create one source file at the tool's instruction
+path with the standard `dot_` mapping, containing the single include line. E.g.
+for a tool that reads `~/.foo/AGENTS.md`:
+
+```
+mkdir -p dot_foo
+printf '{{ "{{" }} includeTemplate "ai-instructions.md" . {{ "}}" }}\n' > dot_foo/AGENTS.md.tmpl
+chezmoi diff   # preview, then: chezmoi apply
+```
+
+That's the whole job — the shared core comes along for free.
+
+**Deferred tools (paths unconfirmed):** Cursor and Grok were intentionally left
+out because their *global* instruction path varies by version and wasn't
+verifiable without the tool installed. To add either, confirm the real path on a
+machine that has it, then follow the recipe above:
+
+- **Cursor** — global rules path has shifted across versions
+  (`~/.cursor/rules/`, `AGENTS.md` support, …). Confirm before adding.
+- **Grok** — confirm the Grok CLI's global-instructions path before adding.
 
 ## Conventions
 
