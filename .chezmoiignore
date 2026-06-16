@@ -5,9 +5,12 @@
 # Repo-level docs — these live only in the git working tree, never in $HOME.
 README.md
 AGENTS.md
+CONTEXT.md
 LICENSE
 .github
 .github/**
+docs
+docs/**
 
 # Claude Code runtime directories — these are state, not config.
 # Never let these get swept into the repo.
