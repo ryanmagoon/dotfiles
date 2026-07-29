@@ -1,1 +1,17 @@
-{}
+{
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "imessage@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": false,
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    }
+  },
+  "theme": "light"
+}
