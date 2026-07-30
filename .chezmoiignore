@@ -25,6 +25,26 @@ docs/**
 .claude/session-env
 .claude/session-env/**
 
+# Codex runtime state and credentials — these are state, not config.
+# auth.json holds OAuth tokens; NEVER let it near the repo (it's public).
+.codex/auth.json
+.codex/sessions
+.codex/sessions/**
+.codex/sqlite
+.codex/sqlite/**
+.codex/tmp
+.codex/tmp/**
+.codex/log
+.codex/log/**
+.codex/history.jsonl
+.codex/models_cache.json
+.codex/.codex-global-state.json
+.codex/.personality_migration
+.codex/vendor_imports
+.codex/vendor_imports/**
+.codex/skills/.system
+.codex/skills/.system/**
+
 # Skills-installer lockfile that lives in the repo working tree (written by
 # the mattpocock/skills installer run from the repo root) — not a dotfile,
 # never apply it to $HOME.
