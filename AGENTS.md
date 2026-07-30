@@ -18,6 +18,7 @@ Starts with Claude Code config; more tools will follow.
 | Edit the shared AI instructions | `.chezmoitemplates/ai/<topic>.md`             |
 | Reorder / add a topic           | `.chezmoitemplates/ai-instructions.md`        |
 | Onboard a new AI tool           | New `dot_<tool>/<file>.md.tmpl` (see below)   |
+| Codex config / prompts / rules  | See "Codex (first-class target)" below        |
 | Edit Claude settings            | `dot_claude/settings.json`                    |
 | Edit Claude keybindings         | `dot_claude/keybindings.json`                 |
 | Add a Claude agent              | `dot_claude/agents/<name>.md`                 |
@@ -67,6 +68,32 @@ chezmoi diff   # preview, then: chezmoi apply
 
 That's the whole job — the shared core comes along for free.
 
+## Codex (first-class target)
+
+Codex is the primary daily harness on the work machine, so treat
+`~/.codex/AGENTS.md` as a first-class Delivery Target, not an afterthought.
+Codex merges the global `~/.codex/AGENTS.md` with any repo-root `AGENTS.md`
+(like this file) — both layers matter.
+
+Beyond instructions, Codex has its own config surface, analogous to Claude's:
+
+| Codex file                | Purpose                            | Tracked?          |
+|---------------------------|------------------------------------|-------------------|
+| `~/.codex/AGENTS.md`      | Global instructions (the fan-out)  | Yes — rendered    |
+| `~/.codex/config.toml`    | Model, approval policy, MCP servers| Not yet — see below |
+| `~/.codex/rules/*.rules`  | Command-permission prefix rules    | Not yet — see below |
+| `~/.codex/prompts/*.md`   | Custom prompts (slash commands)    | Not yet — see below |
+| `~/.codex/auth.json`      | OAuth tokens                       | NEVER (secret)    |
+
+**Onboarding a machine that already has Codex config** (e.g. the work
+machine): backport first, apply second. Copy its `config.toml`, `rules/`, and
+`prompts/` into `dot_codex/` on a branch, strip anything machine-specific or
+work-confidential, merge, and only then run `chezmoi apply` there. Applying
+first would do nothing destructive (these files are unmanaged until tracked),
+but backporting first is what makes the repo canonical. The richest Codex
+config currently lives on the work machine, which is why these files aren't
+tracked yet — don't seed them from a machine with placeholder config.
+
 **Deferred tools (paths unconfirmed):** Cursor and Grok were intentionally left
 out because their *global* instruction path varies by version and wasn't
 verifiable without the tool installed. To add either, confirm the real path on a
@@ -104,7 +131,13 @@ machine that has it, then follow the recipe above:
   them into the source if you're not careful. Don't.
 - **Committing secrets**. This repo is PUBLIC. No API keys, no session
   tokens, no `.env` contents, no `~/.claude.json` auth blob, no OAuth
-  credentials. Scan before staging.
+  credentials. `~/.codex/auth.json` is an OAuth token blob sitting right next
+  to files we do manage — never `chezmoi add` anything under `~/.codex/`
+  without checking what it is. Scan before staging.
+- **Committing Codex runtime state** (`~/.codex/sessions/`, `sqlite/`, `tmp/`,
+  `models_cache.json`, `vendor_imports/`, `skills/.system/`). Same deal as the
+  Claude runtime dirs: state, not config. `.chezmoiignore` blocks them at
+  apply-time, but be careful with manual `chezmoi add`.
 - **Committing `settings.local.json`** — it's per-machine state.
   `.chezmoiignore` already excludes it. Don't fight that.
 - **Hardcoding absolute paths** that only work on one OS. Use
