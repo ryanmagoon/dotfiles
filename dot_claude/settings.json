@@ -1,4 +1,5 @@
 {
+  "includeCoAuthoredBy": false,
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
     "imessage@claude-plugins-official": true
