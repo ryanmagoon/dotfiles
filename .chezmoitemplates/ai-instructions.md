@@ -16,22 +16,13 @@
 These conventions apply to every project unless a project's own instructions say
 otherwise. Keep them load-bearing — they are loaded into context on every run.
 
-{{ includeTemplate "ai/coding-principles.md" . -}}
-
-{{ includeTemplate "ai/commits.md" . -}}
-
-{{ includeTemplate "ai/git-workflow.md" . -}}
-
-{{ includeTemplate "ai/ci-checks.md" . -}}
-
-{{ includeTemplate "ai/testing.md" . -}}
-
-{{ includeTemplate "ai/code-style.md" . -}}
-
-{{ includeTemplate "ai/error-handling.md" . -}}
-
-{{ includeTemplate "ai/session-start.md" . -}}
-
-{{ includeTemplate "ai/self-healing.md" . -}}
-
+{{ includeTemplate "ai/coding-principles.md" . }}
+{{ includeTemplate "ai/commits.md" . }}
+{{ includeTemplate "ai/git-workflow.md" . }}
+{{ includeTemplate "ai/ci-checks.md" . }}
+{{ includeTemplate "ai/testing.md" . }}
+{{ includeTemplate "ai/code-style.md" . }}
+{{ includeTemplate "ai/error-handling.md" . }}
+{{ includeTemplate "ai/session-start.md" . }}
+{{ includeTemplate "ai/self-healing.md" . }}
 {{ includeTemplate "ai/context-management.md" . -}}

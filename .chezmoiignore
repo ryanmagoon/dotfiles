@@ -25,6 +25,11 @@ docs/**
 .claude/session-env
 .claude/session-env/**
 
+# Skills-installer lockfile that lives in the repo working tree (written by
+# the mattpocock/skills installer run from the repo root) — not a dotfile,
+# never apply it to $HOME.
+skills-lock.json
+
 # Local per-machine overrides that should never be synced.
 .claude/*.local.json
 .claude/settings.local.json
