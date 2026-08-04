@@ -42,6 +42,7 @@ The test: Every changed line should trace directly to the user's request.
 ## Managed Personal Configuration
 
 - Before editing a user-level configuration file, check whether chezmoi manages it with `chezmoi source-path <target>`. If it does, edit the source file, review `chezmoi diff`, run `chezmoi apply --dry-run -v`, and then apply it. Never leave a target-only edit that the next chezmoi apply will overwrite.
+- Treat the chezmoi source as public. Never add employer-specific names, internal URLs, issue keys, repository names, source code, architecture details, customer data, credentials, or other non-public business information. Keep reusable instructions generic. If a rule cannot be made generic without losing its meaning, keep it out of dotfiles.
 
 ## Diagnose Before Fixing
 
