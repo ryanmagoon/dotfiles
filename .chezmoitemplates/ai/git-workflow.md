@@ -9,3 +9,4 @@
 ## Pull Requests
 
 - **Always squash merge PRs.** Use `gh pr merge --squash` (or the GitHub UI squash-and-merge option) so each PR lands on `main` as a single, clean commit. This keeps `main` history readable regardless of how many granular commits the working branch had.
+- **Explain surprising choices where the reviewer sees them.** If a dependency, flag, workaround, suppression, or implementation choice looks unused or wrong without hidden context, add a concise inline GitHub comment on the relevant diff line. State what loads or requires it and why the obvious alternative was not used. Do not make reviewers reconstruct intent from tooling internals or the PR description.

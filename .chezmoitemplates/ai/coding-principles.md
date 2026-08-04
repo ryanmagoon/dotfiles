@@ -39,6 +39,10 @@ When your changes create orphans:
 
 The test: Every changed line should trace directly to the user's request.
 
+## Managed Personal Configuration
+
+- Before editing a user-level configuration file, check whether chezmoi manages it with `chezmoi source-path <target>`. If it does, edit the source file, review `chezmoi diff`, run `chezmoi apply --dry-run -v`, and then apply it. Never leave a target-only edit that the next chezmoi apply will overwrite.
+
 ## Diagnose Before Fixing
 
 **Measure first. Don't theorize about the cause of a bug when you can instrument and observe.**
