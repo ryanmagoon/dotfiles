@@ -17,6 +17,7 @@ These conventions apply to every project unless a project's own instructions say
 otherwise. Keep them load-bearing — they are loaded into context on every run.
 
 {{ includeTemplate "ai/coding-principles.md" . }}
+{{ includeTemplate "ai/external-publishing.md" . }}
 {{ includeTemplate "ai/commits.md" . }}
 {{ includeTemplate "ai/git-workflow.md" . }}
 {{ includeTemplate "ai/ci-checks.md" . }}
