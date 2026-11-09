@@ -1,0 +1,6 @@
+# Vite+ bin (https://viteplus.dev)
+[[ -r "$HOME/.vite-plus/env" ]] && . "$HOME/.vite-plus/env"
+[[ -r "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+# Optional private overlay (see README "Private overlay").
+[[ -r ~/.config/zsh/overlay/zshenv.zsh ]] && source ~/.config/zsh/overlay/zshenv.zsh
