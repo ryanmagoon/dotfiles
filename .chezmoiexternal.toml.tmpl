@@ -1,0 +1,8 @@
+{{- /* Optional private zsh overlay. Cloned only when the machine's local, untracked
+       chezmoi config sets data.zshOverlayRepo. See README "Private overlay". */ -}}
+{{- with index . "zshOverlayRepo" }}
+[".config/zsh/overlay"]
+    type = "git-repo"
+    url = {{ . | quote }}
+    refreshPeriod = "24h"
+{{- end }}
