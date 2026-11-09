@@ -1,0 +1,12 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Some repos are slow to scan; don't let a module hang the prompt.
+command_timeout = 500
+
+# Shows the active gcloud account/project on every prompt; too noisy here.
+[gcloud]
+disabled = true
+
+# Spawns a JVM to read the version: ~30ms warm, ~250ms cold, on every prompt in Java repos.
+[java]
+disabled = true

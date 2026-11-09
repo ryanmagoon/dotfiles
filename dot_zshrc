@@ -1,0 +1,74 @@
+# Secrets live in one macOS Keychain item, "zsh-secrets", as space-separated
+# KEY=VALUE pairs, so they never touch this (public) file. One lookup is ~20ms.
+# Edit: security add-generic-password -a "$USER" -s zsh-secrets -U -w 'K1=v1 K2=v2'
+if (( $+commands[security] )); then
+  () {
+    local blob pair
+    blob="$(security find-generic-password -a "$USER" -s zsh-secrets -w 2>/dev/null)"
+    if [[ -z $blob ]]; then
+      print -u2 "zshrc: Keychain item 'zsh-secrets' not found; secrets not loaded."
+      return
+    fi
+    for pair in ${(s: :)blob}; do
+      [[ $pair =~ '^[A-Z_]+=' ]] && export "$pair"
+    done
+  }
+fi
+
+# Docker: lazy-loaded for performance.
+docker() {
+  unset -f docker
+  source ~/.docker/init-zsh.sh 2>/dev/null
+  docker "$@"
+}
+
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+*":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+export PATH="$HOME/.console-ninja/.bin:$HOME/.opencode/bin:$HOME/.local/bin:$PATH"
+
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:/opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/bin"
+
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
+
+# Completion. Drop pre-generated completion files into ~/.zsh/completions.
+# -C skips compaudit; delete ~/.zcompdump if new completions don't show up.
+fpath=(~/.zsh/completions $fpath)
+autoload -Uz compinit && compinit -C
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # case-insensitive
+zstyle ':completion:*' menu select                         # arrow-key menu
+
+# Optional private overlay (see README "Private overlay").
+[[ -r ~/.config/zsh/overlay/zshrc.zsh ]] && source ~/.config/zsh/overlay/zshrc.zsh
+
+# History
+HISTSIZE=100000
+SAVEHIST=100000
+setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
+
+# Cached init scripts for starship, fzf and zoxide (each would otherwise spawn a
+# subprocess on every shell). A cache is regenerated when its binary is newer.
+_source_cached_init() {
+  local name=$1 binary=${commands[$1]} cache=~/.cache/zsh/$1-init.zsh
+  shift
+  [[ -n $binary ]] || return 0
+  if [[ ! -s $cache || $binary -nt $cache ]]; then
+    mkdir -p ${cache:h}
+    "$binary" "$@" > $cache || { print -u2 "zshrc: failed to generate $name init"; return 1; }
+  fi
+  source $cache
+}
+_source_cached_init starship init zsh --print-full-init
+_source_cached_init fzf --zsh
+_source_cached_init zoxide init zsh
+unfunction _source_cached_init
+
+[[ -r /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] &&
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Must be sourced last so it can wrap every other ZLE widget.
+[[ -r /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] &&
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
